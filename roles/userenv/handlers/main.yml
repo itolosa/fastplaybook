@@ -1,0 +1,7 @@
+---
+
+- name: rbenv rehash
+  shell: cd; zsh -ic "rbenv rehash"
+
+- name: sets global ruby version
+  shell: cd; zsh -ic "rbenv global {{ ruby_version }}"

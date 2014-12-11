@@ -1,0 +1,8 @@
+[nyc-webservers]
+54.94.152.177
+
+[webservers:children]
+nyc-webservers
+
+[dbservers:children]
+nyc-webservers

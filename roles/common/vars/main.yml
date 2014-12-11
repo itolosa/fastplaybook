@@ -1,0 +1,59 @@
+---
+apt_install_packages:
+  - nginx
+  - build-essential
+  - htop
+  - vim
+  - zsh
+  - nano
+  - git-core
+  - python-dev
+  - python-setuptools
+  - postgresql
+  - nmap
+  - curl
+  - libssl-dev
+  - mysql-server
+  - mysql-client
+  - mysql-common
+  - libxslt1-dev
+  - libxml2-dev
+  - autoconf
+  - automake
+  - bison
+  - exuberant-ctags
+  - libreadline6
+  - libreadline6-dev
+  - libreadline-dev
+  - libsqlite3-0
+  - libsqlite3-dev
+  - libyaml-dev
+  - libc6-dev
+  - libncurses5-dev
+  - libtool
+  - openssl
+  - sqlite3
+  - subversion
+  - zlib1g
+  - zlib1g-dev
+  - monit
+  - redis-server
+  - libpq-dev
+
+apt_remove_packages:
+  - apache2
+  - apache2.2-common
+
+normal_users:
+  - nachoman
+  - deploy
+
+#    ssl:
+#      certificate: /etc/ssl/localcerts/my_app1.pem
+#      certificate_key: /etc/ssl/localcerts/my_app1.key
+#      sensitive_uris:
+#        - ^/user/sign_in(.*)
+#        - ^/user/password(.*)
+#      access_log:
+#        format: 'main'
+

@@ -1,0 +1,21 @@
+set mailserver smtp.gmail.com port 587
+  username "ignatg@gmail.com" password "void(*new)freem4ll0c"
+  using tlsv1
+  with timeout 30 seconds
+
+set mail-format {
+  from: tars@svp.com
+  reply-to: contacto@pasajesla.com
+  subject: $SERVICE $EVENT at $DATE
+  message: 
+  Hi guys,
+  
+      Action: $ACTION
+      Service: $SERVICE
+      Date: $DATE
+      Host: $HOST
+      Description: $DESCRIPTION
+  
+  Toc toc who's there?
+  T.A.R.S.
+}

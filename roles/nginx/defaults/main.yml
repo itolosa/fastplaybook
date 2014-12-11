@@ -1,0 +1,8 @@
+---
+nginx_sites:
+  - name: 'seldy'
+    server_name: 'seldy.pasajesla.cl'
+    root: /home/deploy/seldy/production/current
+    access_log:
+      format: 'main'
+app_domain: www.example.com

@@ -1,0 +1,32 @@
+---
+- name: setup monit
+  template: src={{item}}.j2 dest=/etc/monit/monitrc.d/{{item}} owner=root group=root mode=0644
+  with_items:
+    - mmonit
+    - mailer
+    - monitweb
+    - redis
+    - nginx
+    - postgresql
+    - sidekiq_test
+    - sidekiq_production
+    - sidekiq_development
+    - unicorn_test
+    - unicorn_production
+    - unicorn_development
+
+- name: enable monit
+  file: src=/etc/monit/monitrc.d/{{item}} dest=/etc/monit/conf.d/{{item}} state=link owner=root group=root mode=0644
+  with_items:
+    - mmonit
+    - mailer
+    - monitweb
+    - redis
+    - nginx
+    - postgresql
+    - sidekiq_test
+    - sidekiq_production
+    - sidekiq_development
+    - unicorn_test
+    - unicorn_production
+    - unicorn_development

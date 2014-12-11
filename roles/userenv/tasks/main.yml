@@ -1,0 +1,78 @@
+---
+
+- name: setup oh-my-zsh
+  git: repo=https://github.com/robbyrussell/oh-my-zsh.git dest=~{{ remote_username }}/.oh-my-zsh update=no
+  tags: atest
+
+- name: setup zshrc
+  copy: src=zshrc dest=~{{ remote_username }}/.zshrc
+
+- name: setup vimfiles
+  git: repo=https://github.com/itolosa/vimfiles.git dest=~{{ remote_username }}/.vim update=no
+
+- name: checking if submoduled
+  stat: path=~{{ remote_username }}/.vim/setup_done
+  register: stat_file_result
+
+- name: submodule update in vimfiles
+  shell: git submodule update --init --recursive chdir=~{{ remote_username }}/.vim
+  when: stat_file_result.stat.exists is defined and not stat_file_result.stat.exists
+
+- name: register submodule done
+  file: path=~{{ remote_username }}/.vim/setup_done state=touch
+
+- name: create link for vimfiles
+  file: path=~{{ remote_username }}/.vimrc src=~{{ remote_username }}/.vim/vimrc state=link
+
+- name: Adds .gemrc
+  copy: src=gemrc dest=~{{ remote_username }}/.gemrc owner={{ remote_username }} group={{ remote_username }} mode=0750
+
+- name: check clone rbenv
+  git: repo=https://github.com/sstephenson/rbenv.git dest=~{{ remote_username }}/.rbenv update=no
+
+- name: ensure plugins
+  file: path=~{{ remote_username }}/.rbenv/plugins state=directory
+  tags: atask
+
+- name: setup ruby-build
+  git: repo=https://github.com/sstephenson/ruby-build.git dest=~{{ remote_username }}/.rbenv/plugins/ruby-build
+  #meta: flush_handlers
+  tags: atask
+
+- name: checks if target ruby is installed
+  shell: cd; zsh -ic "rbenv versions | grep {{ ruby_version }} | tr '*' ' ' | sed -e 's/\s\+//' | cut -f1 -d' '"
+  register: ruby_is_installed
+  tags: atask
+
+- name: installs ruby
+  tags: atask
+  notify:
+    - sets global ruby version
+    - rbenv rehash
+  when: ruby_is_installed.stdout != ruby_version
+#  meta: flush_handlers
+  shell: cd; zsh -ic "MAKEOPTS={{ rbenv_makeopts }} CONFIGURE_OPTS=--disable-install-rdoc rbenv install {{ ruby_version }}"
+
+- name: flushing handlers
+  meta: flush_handlers
+
+- name: sets global ruby version
+  shell: cd; zsh -ic "rbenv global {{ ruby_version }}"
+  tags: checkrails
+
+- name: rbenv rehash
+  shell: cd; zsh -ic "rbenv rehash"
+  tags: checkrails
+
+- name: check if rails installed
+  shell: cd; zsh -ic "gem which rails"
+  register: check_rails
+  ignore_errors: yes
+  changed_when: False
+  tags: checkrails
+
+- name: install rails
+  shell: cd; zsh -ic "gem install rails"
+  tags: checkrails
+  when: check_rails.rc == 1
+  notify: rbenv rehash

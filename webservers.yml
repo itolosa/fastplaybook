@@ -1,0 +1,32 @@
+---
+- hosts: all
+  remote_user: root
+  gather_facts: no
+  roles:
+    - { role: common, remote_user: root }
+    - monit
+
+- hosts: all
+  remote_user: deploy
+  gather_facts: no
+  roles:
+    - { role: capenv, tags: onlydeploy, app_env: production, cap_path: /home/deploy/seldy/production, app_domain: seldy.pasajesla.cl}
+    - { role: capenv, tags: onlydeploy, app_env: test, cap_path: /home/deploy/seldy/test, app_domain: test.pasajesla.cl }
+
+- hosts: all
+  remote_user: nachoman
+  gather_facts: no
+  vars:
+    - remote_username: nachoman
+    - homedir: /home/nachoman
+  roles:
+    - userenv
+
+- hosts: all
+  remote_user: deploy
+  gather_facts: no
+  vars:
+    - remote_username: deploy
+    - homedir: /home/deploy
+  roles:
+    - userenv

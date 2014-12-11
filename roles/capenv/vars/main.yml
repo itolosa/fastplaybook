@@ -1,0 +1,7 @@
+---
+nginx_sites:
+  - name: "{{app_name}}_{{app_env}}"
+    server_name: "{{app_domain}}"
+    root: "{{ cap_path }}/current"
+    access_log:
+      format: ''

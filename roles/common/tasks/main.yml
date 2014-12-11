@@ -1,0 +1,85 @@
+---
+- name: cleaning up packages in the system
+  apt: name={{ item }} state=absent
+  with_items: apt_remove_packages
+
+- name: ensure installed packages
+  apt: name={{ item }} state=present update_cache=yes
+  with_items: apt_install_packages
+  notify:
+    - restart nginx
+    - restart postgresql
+
+- name: check if nodejs is installed
+  shell: dpkg-query -l nodejs
+  register: deb_check
+  ignore_errors: yes
+
+- name: setup repo for nodejs
+  shell: curl -sL https://deb.nodesource.com/setup | bash -
+  when: deb_check.rc == 1
+
+- name: install nodejs
+  apt: name=nodejs state=present
+  when: deb_check.rc == 1
+
+- name: check if pip is installed
+  shell: which pip
+  register: check_pip
+  ignore_errors: yes
+
+- name: install pip
+  shell: easy_install pip
+  when: check_pip.rc == 1
+
+#- name: install pip packages
+#  shell: pip install {{item}}
+#  with_items:
+#    - psycopg2
+
+- name: ensure groups for normal users
+  group: name={{ item }} state=present
+  with_items: normal_users
+
+- name: setup users
+  user: name={{ item }} shell=/bin/zsh group={{ item }} groups=sudo state=present append=true generate_ssh_key=true
+  with_items: normal_users
+
+- name: ensure .ssh exists
+  file: path=~{{ item }}/.ssh state=directory
+  with_items: normal_users
+
+- name: setting up user public key
+  authorized_key: user={{ item }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}" state=present
+  with_items: normal_users
+
+#- name: setup pgsql user
+#  postgresql_user: db=seldy login_user=svprds login_host=rds-pgsql1.c97jxq1n52ik.sa-east-1.rds.amazonaws.com login_password=holahola123 name={{item}} password=hola123 role_attr_flags=CREATEDB,NOSUPERUSER
+#  with_items:
+#    - monit
+#    - nachoman
+#    - deploy
+
+- name: ensure mmonit directory
+  file: path=/usr/local/mmonit state=directory
+
+#- name: fetch mmonit
+#  get_url: url=http://mmonit.com/dist/mmonit-3.3-linux-x64.tar.gz dest=/tmp/monit.tar.gz
+
+# Example from Ansible Playbooks
+#- name: untar monit
+#  unarchive: src=/tmp/monit.tar.gz dest=/usr/local/mmonit
+
+#- name: copying init conf monit
+#  template: src=mmonit.conf.j2 dest=/etc/init/mmonit.conf
+
+#- name: replacing some code for postgres
+#  replace: dest=/etc/hosts regexp='(\s+)old\.host\.name(\s+.*)?$' replace='\1new.host.name\2' backup=yes
+
+#- name: reload conf for monit
+#  shell: initctl reload-configuration
+
+#- name: starting monit
+#  shell: start mmonit
+
+

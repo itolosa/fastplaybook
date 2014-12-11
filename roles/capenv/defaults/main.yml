@@ -1,0 +1,21 @@
+---
+db_timeout: 5000
+db_username: svprds
+db_password: holahola123
+db_pool: 5
+db_host: rds-pgsql1.c97jxq1n52ik.sa-east-1.rds.amazonaws.com
+db_port: 5432
+app_name: seldy
+deploy_user: deploy
+cap_path: /home/$deploy_user/$app_name/$app_env
+app_env: production
+app_domain: seldy.pasajesla.cl
+
+#    ssl:
+#      certificate: /etc/ssl/localcerts/my_app1.pem
+#      certificate_key: /etc/ssl/localcerts/my_app1.key
+#      sensitive_uris:
+#        - ^/user/sign_in(.*)
+#        - ^/user/password(.*)
+#      access_log:
+#        format: 'main'

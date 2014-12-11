@@ -1,0 +1,5 @@
+check process sidekiq_test with pidfile /home/deploy/seldy/test/current/tmp/pids/sidekiq.pid
+  start program = "/home/deploy/seldy/test/shared/config/sidekiq_init.sh start" with timeout 120 seconds
+  stop program = "/home/deploy/seldy/test/shared/config/sidekiq_init.sh stop" with timeout 120 seconds
+  if totalmem is greater than 200 MB for 2 cycles then restart
+  if 5 restarts within 5 cycles then timeout

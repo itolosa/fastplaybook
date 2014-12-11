@@ -1,0 +1,6 @@
+---
+homedir: /home/nachoman
+remote_username: nachoman
+ruby_version: 2.1.5
+# Fill if needed
+rbenv_makeopts: ""

@@ -1,0 +1,31 @@
+---
+- name: ensure path exists
+  file: path={{cap_path}}/shared/config state=directory
+
+- name: setting database config
+  template: src=database.yml.j2 dest={{cap_path}}/shared/config/database.yml
+
+- name: setting sidekiq config
+  template: src=sidekiq.yml.j2 dest={{cap_path}}/shared/config/sidekiq.yml
+
+- name: setup sidekiq init script
+  template: src=sidekiq_init.sh.j2 dest={{cap_path}}/shared/config/sidekiq_init.sh mode=0755
+
+- name: setup unicorn init script
+  template: src=unicorn_init.sh.j2 dest={{cap_path}}/shared/config/unicorn_init.sh mode=0755
+
+- name: Generate site configurations
+  template: src=nginx-site.j2 dest=/etc/nginx/sites-available/{{ item.name }} owner=root group=root mode=0644
+  sudo: True
+  sudo_user: root
+  notify:
+    - reload nginx
+  with_items: nginx_sites
+
+- name: Enable sites
+  file: src=/etc/nginx/sites-available/{{ item.name }} dest=/etc/nginx/sites-enabled/{{ item.name }} state=link owner=root group=root mode=0644
+  sudo: True
+  sudo_user: root
+  notify:
+    - reload nginx
+  with_items: nginx_sites
