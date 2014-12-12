@@ -10,8 +10,9 @@
   remote_user: deploy
   gather_facts: no
   roles:
-    - { role: capenv, tags: onlydeploy, app_env: production, cap_path: /home/deploy/seldy/production, app_domain: seldy.pasajesla.cl}
-    - { role: capenv, tags: onlydeploy, app_env: test, cap_path: /home/deploy/seldy/test, app_domain: test.pasajesla.cl }
+    - { role: capenv, tags: onlydeploy, app_env: production, cap_path: /home/deploy/pasajesla/production, app_domain: pasajesla.cl}
+    - { role: capenv, tags: onlydeploy, app_env: test, cap_path: /home/deploy/pasajesla/test, app_domain: pasajesla.cl }
+    - { role: capenv, tags: onlydeploy, app_env: development, cap_path: /home/deploy/pasajesla/development, app_domain: pasajesla.cl}
 
 - hosts: all
   remote_user: nachoman

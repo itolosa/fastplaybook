@@ -1,6 +1,6 @@
 ---
 nginx_sites:
-  - name: 'seldy'
+  - name: 'pasajesla'
     server_name: $app_domain
     root: $cap_path/current
     access_log:

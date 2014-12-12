@@ -1,5 +1,5 @@
 [nyc-webservers]
-54.94.152.177
+pasajesla.cl
 
 [webservers:children]
 nyc-webservers
